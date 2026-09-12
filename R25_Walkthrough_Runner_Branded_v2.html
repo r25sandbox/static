@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b1b33">
@@ -285,6 +285,163 @@ textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,152,58,.15
   .photoBtn small{font-size:14px}
   .navBtn{font-size:24px;min-height:92px}
 }
+
+/* Phone-first refinements while preserving the iPad layout */
+@media(max-width:600px){
+  body{padding-bottom:108px}
+  .header{
+    grid-template-columns:1fr auto;
+    gap:10px;
+    padding:calc(env(safe-area-inset-top) + 12px) 14px 12px;
+  }
+  .brand{font-size:30px}
+  .tagline{font-size:10px;letter-spacing:.06em;margin-top:5px}
+  .menu{width:42px;height:38px}
+  .menu span{height:3px}
+  .titleBlock{
+    grid-column:1/-1;
+    padding-top:10px;
+    margin-top:2px;
+  }
+  .title{font-size:18px}
+  .property{font-size:16px;margin-top:2px}
+  .address{font-size:12px;line-height:1.25}
+
+  .main{padding:12px 10px 20px}
+  .progressRow{gap:10px}
+  .stepCount,.pct{font-size:20px}
+  .progress{height:13px}
+  .breadcrumb{
+    margin:6px 0 12px;
+    font-size:14px;
+    line-height:1.25;
+  }
+
+  .card{
+    border-radius:18px;
+    padding:18px 16px;
+  }
+  .section{font-size:15px}
+  .task{
+    font-size:34px;
+    line-height:1.02;
+    margin:8px 0 12px;
+  }
+  .instruction{
+    font-size:17px;
+    line-height:1.35;
+    margin-bottom:14px;
+  }
+  .checkLead{font-size:16px;margin-bottom:8px}
+  .checks{gap:10px}
+  .check{
+    font-size:17px;
+    gap:12px;
+    line-height:1.2;
+  }
+  .check input{
+    width:28px;height:28px;min-width:28px;
+    border-width:2px;
+  }
+  .check input:checked:after{
+    left:8px;top:3px;width:7px;height:14px;
+    border-width:0 3px 3px 0;
+  }
+
+  .issuePanel{
+    margin-top:12px;
+    border-radius:18px;
+    padding:16px;
+  }
+  .issueLabel{font-size:23px}
+  .warnIcon{width:31px;height:31px;border-width:3px}
+  .warnIcon:after{left:9px;top:0;font-size:19px}
+  .issueHint{font-size:16px;margin:10px 0 8px}
+  textarea{
+    min-height:92px;
+    border-radius:13px;
+    padding:13px 52px 13px 13px;
+    font-size:17px;
+  }
+  .mic{
+    right:9px;bottom:9px;
+    width:40px;height:40px;
+    font-size:25px;
+  }
+
+  .photoRow{
+    gap:10px;
+    margin-top:12px;
+  }
+  .photoBtn{
+    min-height:84px;
+    border-radius:18px;
+    padding:16px 10px;
+    font-size:19px;
+  }
+  .photoBtn small{
+    font-size:11px;
+    line-height:1.15;
+    margin-top:6px;
+  }
+
+  .navRow{
+    position:fixed;
+    left:0;right:0;bottom:0;
+    z-index:20;
+    grid-template-columns:1fr .8fr 1.1fr;
+    gap:8px;
+    margin:0;
+    padding:8px 10px calc(env(safe-area-inset-bottom) + 8px);
+    background:rgba(251,250,246,.96);
+    backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    box-shadow:0 -8px 24px rgba(10,27,51,.08);
+  }
+  .navBtn{
+    min-height:68px;
+    border-radius:16px;
+    padding:14px 8px;
+    font-size:18px;
+    box-shadow:none;
+  }
+  .arrow{font-size:27px;vertical-align:-2px}
+  .footer{
+    font-size:11px;
+    margin-top:8px;
+    padding-bottom:8px;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .drawer{
+    width:92vw;
+    padding-left:16px;
+    padding-right:16px;
+  }
+  .drawerTitle{font-size:24px}
+  .drawerBtn{font-size:18px;padding:16px}
+  .modalWrap{padding:10px}
+  .modal{
+    width:100%;
+    max-height:92vh;
+    border-radius:18px;
+    padding:18px 14px;
+  }
+  .modal h2{font-size:25px}
+  .field input{font-size:17px}
+  .modalActions{grid-template-columns:1fr}
+  .done{
+    padding:0 10px 120px;
+  }
+  .doneCard{
+    border-radius:20px;
+    padding:20px 16px;
+  }
+  .doneTitle{font-size:32px}
+  .doneBtns{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
