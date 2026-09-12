@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b1b33">
+<title>Realty25AZ Walkthrough Runner</title>
+<style>
+:root{
+  --navy:#0b1b33;
+  --navy2:#132744;
+  --gold:#c9983a;
+  --gold2:#b98527;
+  --gold-soft:#fff4cf;
+  --cream:#fbfaf6;
+  --white:#ffffff;
+  --ink:#0c1730;
+  --muted:#5d6675;
+  --line:#d8dde6;
+  --soft:#eef1f5;
+  --soft2:#f5f6f8;
+  --danger:#995a00;
+  --shadow:0 8px 24px rgba(10,27,51,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{min-height:100vh}
+button,input,textarea{font:inherit}
+.app{min-height:100vh;background:var(--cream)}
+.header{
+  background:linear-gradient(90deg,var(--navy),var(--navy2));
+  color:#fff;
+  padding:calc(env(safe-area-inset-top) + 20px) 28px 22px;
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:24px;
+  align-items:center;
+}
+.brand{
+  font-size:46px;
+  font-weight:900;
+  letter-spacing:-.035em;
+  line-height:1;
+}
+.brand .gold{color:var(--gold)}
+.tagline{font-size:18px;letter-spacing:.04em;margin-top:9px;font-weight:700}
+.titleBlock{border-left:1px solid rgba(255,255,255,.18);padding-left:34px}
+.title{font-size:30px;font-weight:900}
+.property{font-size:20px;margin-top:4px}
+.address{font-size:15px;margin-top:3px;opacity:.92}
+.menu{
+  width:48px;height:42px;border:0;background:transparent;padding:0;display:grid;gap:7px;align-content:center
+}
+.menu span{height:4px;background:#fff;border-radius:999px;display:block}
+
+.main{max-width:1080px;margin:0 auto;padding:22px 28px 40px}
+.progressRow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px}
+.stepCount,.pct{font-size:34px;font-weight:900}
+.progress{
+  height:24px;background:#e4e7eb;border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.05)
+}
+.progressFill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold2),var(--gold));
+  width:0%;
+  border-radius:999px;
+  transition:width .2s ease;
+}
+.breadcrumb{text-align:center;font-size:22px;color:#30394a;margin:8px 0 22px}
+.card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:28px 32px;
+  box-shadow:var(--shadow);
+}
+.section{
+  color:#99630d;
+  font-weight:900;
+  font-size:24px;
+  letter-spacing:.015em;
+  text-transform:uppercase;
+}
+.task{
+  font-size:54px;
+  line-height:1.04;
+  margin:12px 0 18px;
+  font-weight:950;
+  letter-spacing:-.035em;
+}
+.instruction{
+  font-size:21px;
+  line-height:1.45;
+  color:var(--muted);
+  font-weight:650;
+  margin-bottom:18px;
+}
+.checkLead{font-size:24px;color:var(--muted);margin:8px 0 10px}
+.checks{display:grid;gap:13px;margin-top:10px}
+.check{
+  display:flex;align-items:flex-start;gap:16px;font-size:25px;line-height:1.25;cursor:pointer
+}
+.check input{
+  appearance:none;
+  width:38px;height:38px;min-width:38px;
+  border:3px solid #98a1af;border-radius:8px;margin:0;
+  background:#fff;position:relative;
+}
+.check input:checked{
+  background:var(--gold);border-color:var(--gold);
+}
+.check input:checked:after{
+  content:"";
+  position:absolute;
+  left:10px;top:4px;
+  width:9px;height:18px;
+  border:solid #fff;border-width:0 4px 4px 0;
+  transform:rotate(45deg);
+}
+.issuePanel{
+  margin-top:22px;
+  background:linear-gradient(135deg,#fff7da,#fff2bf);
+  border:1px solid #f0d58f;
+  border-radius:24px;
+  padding:22px 28px 26px;
+  box-shadow:var(--shadow);
+}
+.issueTop{
+  display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap
+}
+.issueLabel{
+  display:flex;align-items:center;gap:14px;
+  font-size:34px;font-weight:950;color:#8b4d00
+}
+.warnIcon{
+  width:42px;height:42px;border:4px solid #8b4d00;border-radius:9px;
+  transform:rotate(45deg);position:relative;display:inline-block
+}
+.warnIcon:after{
+  content:"!";
+  position:absolute;transform:rotate(-45deg);
+  left:12px;top:1px;font-size:25px;font-weight:900
+}
+.toggle{
+  background:#fff;border:1px solid #c7ccd4;border-radius:999px;padding:3px;
+  display:grid;grid-template-columns:1fr 1fr;min-width:310px
+}
+.toggle button{
+  border:0;background:transparent;border-radius:999px;padding:13px 18px;
+  font-size:18px;font-weight:800;color:#697282
+}
+.toggle button.active{
+  background:linear-gradient(90deg,var(--gold2),var(--gold));
+  color:#fff;
+}
+.issueHint{font-size:21px;color:#505969;margin:16px 0 10px}
+.noteWrap{position:relative}
+textarea{
+  width:100%;min-height:126px;resize:vertical;
+  border:1px solid #cfd4dc;border-radius:16px;background:#fff;
+  padding:18px 64px 18px 18px;font-size:22px;color:var(--ink);outline:none
+}
+textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,152,58,.15)}
+.mic{
+  position:absolute;right:14px;bottom:15px;width:44px;height:44px;
+  border:0;background:transparent;font-size:30px;color:#6b7280
+}
+.mic.listening{color:#9b5b00;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+
+.photoRow{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px
+}
+.photoBtn{
+  border:1px solid var(--line);border-radius:24px;background:linear-gradient(#f4f5f7,#eceff3);
+  color:var(--ink);padding:28px 24px;min-height:126px;
+  font-size:30px;font-weight:950;box-shadow:var(--shadow)
+}
+.photoBtn small{display:block;font-size:17px;font-weight:650;color:var(--muted);margin-top:10px}
+.photoBtn:active{transform:scale(.995)}
+
+.navRow{
+  display:grid;grid-template-columns:1.05fr .75fr 1.1fr;gap:18px;margin-top:24px
+}
+.navBtn{
+  border:0;border-radius:24px;padding:27px 18px;min-height:108px;
+  font-size:30px;font-weight:950;box-shadow:var(--shadow)
+}
+.back,.skip{background:linear-gradient(#f4f5f7,#e9edf2);color:var(--ink)}
+.next{
+  background:linear-gradient(90deg,var(--gold2),var(--gold));
+  color:#fff
+}
+.next:active,.back:active,.skip:active{transform:scale(.995)}
+.arrow{font-size:44px;vertical-align:-4px}
+.footer{
+  display:flex;justify-content:space-between;gap:14px;
+  margin-top:14px;color:var(--muted);font-size:15px
+}
+.done{
+  display:none;
+  max-width:900px;margin:38px auto;padding:0 28px 60px
+}
+.doneCard{
+  background:#fff;border:1px solid var(--line);border-radius:28px;padding:32px;box-shadow:var(--shadow)
+}
+.doneTitle{font-size:44px;font-weight:950;margin-bottom:10px}
+.log{
+  white-space:pre-wrap;background:#f7f8fa;border:1px solid var(--line);
+  border-radius:16px;padding:16px;margin-top:18px;
+  max-height:340px;overflow:auto;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace
+}
+.doneBtns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.doneBtns button{border:0;border-radius:18px;padding:20px;font-size:20px;font-weight:900}
+.goldBtn{background:var(--gold);color:#fff}
+.grayBtn{background:#e9edf2;color:var(--ink)}
+
+
+.menuBackdrop{
+  position:fixed;inset:0;background:rgba(5,15,30,.38);z-index:30;display:none
+}
+.drawer{
+  position:fixed;top:0;right:0;height:100vh;width:min(420px,88vw);
+  background:#fff;z-index:31;transform:translateX(105%);
+  transition:transform .18s ease;box-shadow:-18px 0 40px rgba(0,0,0,.18);
+  padding:calc(env(safe-area-inset-top) + 24px) 22px 24px;
+}
+.drawer.open{transform:translateX(0)}
+.drawerTitle{font-size:28px;font-weight:950;margin:6px 0 22px}
+.drawerBtn{
+  width:100%;border:1px solid var(--line);background:#f7f8fa;color:var(--ink);
+  border-radius:18px;padding:18px;text-align:left;font-size:20px;font-weight:850;
+  margin-bottom:12px
+}
+.drawerBtn.gold{background:linear-gradient(90deg,var(--gold2),var(--gold));color:#fff;border:0}
+.drawerClose{
+  position:absolute;right:18px;top:calc(env(safe-area-inset-top) + 18px);
+  width:44px;height:44px;border:0;border-radius:999px;background:#eef1f5;
+  font-size:26px;font-weight:900
+}
+.modalWrap{
+  position:fixed;inset:0;background:rgba(5,15,30,.48);z-index:40;
+  display:none;align-items:center;justify-content:center;padding:20px
+}
+.modal{
+  width:min(720px,96vw);max-height:88vh;overflow:auto;
+  background:#fff;border-radius:24px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.28)
+}
+.modal h2{margin:0 0 18px;font-size:30px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:15px;font-weight:850;color:var(--muted);margin-bottom:7px}
+.field input{
+  width:100%;border:1px solid var(--line);border-radius:14px;padding:14px 15px;font-size:20px
+}
+.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.modalActions button{border:0;border-radius:16px;padding:16px;font-size:18px;font-weight:900}
+.previewBox{
+  white-space:pre-wrap;background:#f7f8fa;border:1px solid var(--line);
+  border-radius:14px;padding:14px;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;
+  max-height:55vh;overflow:auto
+}
+
+@media(max-width:760px){
+  .header{grid-template-columns:1fr auto;padding-left:18px;padding-right:18px}
+  .titleBlock{grid-column:1/-1;border-left:0;padding-left:0;border-top:1px solid rgba(255,255,255,.14);padding-top:14px}
+  .brand{font-size:36px}
+  .tagline{font-size:15px}
+  .main{padding:18px 14px 28px}
+  .stepCount,.pct{font-size:28px}
+  .progress{height:18px}
+  .breadcrumb{font-size:18px}
+  .card{padding:22px 20px}
+  .section{font-size:20px}
+  .task{font-size:42px}
+  .instruction{font-size:19px}
+  .checkLead{font-size:20px}
+  .check{font-size:21px}
+  .check input{width:32px;height:32px;min-width:32px}
+  .issueLabel{font-size:29px}
+  .toggle{min-width:0;width:100%}
+  textarea{font-size:19px}
+  .photoBtn{font-size:25px;padding:22px 14px}
+  .photoBtn small{font-size:14px}
+  .navBtn{font-size:24px;min-height:92px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="runner">
+  <header class="header">
+    <div>
+      <div class="brand">Realty<span class="gold">25</span>AZ</div>
+      <div class="tagline">PROPERTY MANAGEMENT &amp; BROKERAGE</div>
+    </div>
+
+    <div class="titleBlock">
+      <div class="title">Walkthrough Runner</div>
+      <div class="property" id="headerPropertyName">Subject Property</div>
+      <div class="address" id="headerPropertyAddress">Tap menu → Subject property</div>
+    </div>
+
+    <button class="menu" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="main">
+    <div class="progressRow">
+      <div class="stepCount" id="stepCount">1 / 1</div>
+      <div class="progress"><div class="progressFill" id="progressFill"></div></div>
+      <div class="pct" id="pct">0%</div>
+    </div>
+
+    <div class="breadcrumb" id="breadcrumb"></div>
+
+    <section class="card">
+      <div class="section" id="sectionName"></div>
+      <h1 class="task" id="taskName"></h1>
+      <div class="instruction" id="instruction"></div>
+
+      <div id="checkArea">
+        <div class="checkLead">Check the following (select all that apply)</div>
+        <div class="checks" id="checks"></div>
+      </div>
+    </section>
+
+    <section class="issuePanel">
+      <div class="issueTop">
+        <div class="issueLabel"><span class="warnIcon"></span> ISSUE</div>
+      </div>
+      <div class="issueHint">Describe what you observed (dictate or type)</div>
+      <div class="noteWrap">
+        <textarea id="issueNote" placeholder="Add a note about the issue..."></textarea>
+        <button class="mic" id="micBtn" onclick="toggleDictation()" aria-label="Dictate note">🎙</button>
+      </div>
+    </section>
+
+    <div class="photoRow">
+      <button class="photoBtn" onclick="addPhoto()">📷 + PHOTO<small>Add another photo for this item</small></button>
+      <button class="photoBtn" onclick="removePhoto()">🗑 − PHOTO<small>Remove last photo for this item</small></button>
+    </div>
+
+    <div class="navRow">
+      <button class="navBtn back" onclick="goBack()">‹ BACK</button>
+      <button class="navBtn skip" onclick="skipStep()">SKIP</button>
+      <button class="navBtn next" onclick="nextStep()">NEXT <span class="arrow">›</span></button>
+    </div>
+
+    <div class="footer">
+      <div id="photoCounter">Expected photos: 0</div>
+      <div>Saved locally on this device</div>
+    </div>
+  </main>
+</div>
+
+
+<div class="menuBackdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+<aside class="drawer" id="drawer">
+  <button class="drawerClose" onclick="closeMenu()">×</button>
+  <div class="drawerTitle">Walkthrough Menu</div>
+  <button class="drawerBtn" onclick="openPropertyModal()">1. Subject property</button>
+  <button class="drawerBtn" onclick="openPreview()">2. Preview log</button>
+  <button class="drawerBtn gold" onclick="exportLog()">3. Export log</button>
+</aside>
+
+<div class="modalWrap" id="propertyModal">
+  <div class="modal">
+    <h2>Subject property</h2>
+    <div class="field">
+      <label>Property name / label</label>
+      <input id="propertyNameInput" placeholder="Example: Saddlehorn 26">
+    </div>
+    <div class="field">
+      <label>Street address</label>
+      <input id="propertyAddressInput" placeholder="6339 W Saddlehorn Rd">
+    </div>
+    <div class="field">
+      <label>City, State ZIP</label>
+      <input id="propertyCityInput" placeholder="Phoenix, AZ 85083">
+    </div>
+    <div class="modalActions">
+      <button class="grayBtn" onclick="closePropertyModal()">CANCEL</button>
+      <button class="goldBtn" onclick="saveProperty()">SAVE PROPERTY</button>
+    </div>
+  </div>
+</div>
+
+<div class="modalWrap" id="previewModal">
+  <div class="modal">
+    <h2>Session log preview</h2>
+    <div class="previewBox" id="previewBox"></div>
+    <div class="modalActions">
+      <button class="grayBtn" onclick="closePreview()">CLOSE</button>
+      <button class="goldBtn" onclick="exportLog()">EXPORT LOG</button>
+    </div>
+  </div>
+</div>
+
+<div class="done" id="done">
+  <div class="doneCard">
+    <div class="doneTitle">Walkthrough complete</div>
+    <div class="instruction">Your field session is saved. Copy the session log when you are ready to process the photos and build the report.</div>
+    <div class="log" id="log"></div>
+    <div class="doneBtns">
+      <button class="grayBtn" onclick="resumeLast()">RETURN</button>
+      <button class="goldBtn" onclick="copyLog()">COPY SESSION LOG</button>
+      <button class="grayBtn" style="grid-column:1/-1" onclick="resetRunner()">RESET WALKTHROUGH</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {
+    section:"Exterior & Curb Appeal",
+    task:"Take photo of front elevation",
+    instruction:"Capture the full front of the property.",
+    checks:["House number visible","Roofline visible","Driveway visible","Landscaping visible"]
+  },
+  {
+    section:"Exterior & Curb Appeal",
+    task:"Take photo of front yard / landscaping",
+    instruction:"Capture the overall condition of front landscaping.",
+    checks:["No obvious dead vegetation","Irrigation area appears intact","No major debris","Walkway clear"]
+  },
+  {
+    section:"Exterior & Curb Appeal",
+    task:"Take photo of backyard",
+    instruction:"Capture a wide backyard overview.",
+    checks:["Yard generally maintained","No major debris","Fence line visible","Patio area visible"]
+  },
+  {
+    section:"Living / Family Area",
+    task:"Take living area overview",
+    instruction:"Capture walls, ceiling, floors, windows, and overall room condition.",
+    checks:["Walls & ceilings appear intact","Floors appear intact","Windows & blinds present","No obvious unauthorized modifications","No obvious pet damage"]
+  },
+  {
+    section:"Kitchen",
+    task:"Take kitchen overview",
+    instruction:"Capture cabinets, countertops, sink, and appliances.",
+    checks:["Cabinets intact","Countertops intact","Sink area dry","Appliances present","No obvious mold or pest signs"]
+  },
+  {
+    section:"Kitchen",
+    task:"Check sink & plumbing",
+    instruction:"Run water and inspect below the sink. Take a photo of the plumbing area.",
+    checks:["No active leak","Drain appears functional","Supply lines intact","Cabinet base dry"]
+  },
+  {
+    section:"Bedroom 1",
+    task:"Take bedroom overview",
+    instruction:"Capture walls, ceiling, floors, windows, and general condition.",
+    checks:["Walls & ceilings appear intact","Floors appear intact","Windows & blinds present","Door operates","No obvious pet damage"]
+  },
+  {
+    section:"Bathrooms",
+    task:"Take bathroom overview",
+    instruction:"Capture vanity, fixtures, flooring, and ventilation area.",
+    checks:["Sink area dry","Floor dry","Vanity intact","Exhaust fan present","No visible mold or mildew"]
+  },
+  {
+    section:"Bathrooms",
+    task:"Take photo of tub / shower",
+    instruction:"Capture the tub, shower surround, fixtures, caulking, and adjacent surfaces.",
+    checks:["No leaks at tub, faucet, shower head","Caulking & grout intact","No mold or mildew","Shower door / curtain and hardware OK","Overall cleanliness"]
+  },
+  {
+    section:"Garage",
+    task:"Take garage overview",
+    instruction:"Capture the garage door, floor, storage, and general condition.",
+    checks:["Garage door area visible","No major fluid stains","No obvious storage hazards","Floor generally clear"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Check HVAC filter",
+    instruction:"Inspect and photograph the HVAC filter condition.",
+    checks:["Filter present","Filter seated correctly","No excessive visible buildup"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Check thermostat",
+    instruction:"Verify the thermostat is functional and take a photo.",
+    checks:["Display active","Setpoint visible","No visible damage"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Test smoke detectors",
+    instruction:"Press the test button at required detector locations.",
+    checks:["Bedroom detector(s) tested","Hallway detector tested","Main living area detector tested"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Check CO detector",
+    instruction:"Confirm presence, press test button, and take a photo.",
+    checks:["Detector present","Test completed","No visible damage"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Check water heater",
+    instruction:"Inspect for visible leaks and photograph the unit.",
+    checks:["No visible leak","Area around unit dry","No obvious damage"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Check electrical panel",
+    instruction:"Inspect for visible issues and photograph the panel exterior.",
+    checks:["Panel accessible","Cover intact","No obvious scorching or damage"]
+  },
+  {
+    section:"Systems & Safety",
+    task:"Check laundry area",
+    instruction:"Inspect cleanliness, lint area, and visible exhaust condition.",
+    checks:["Area reasonably clean","No visible leak","Lint area checked","Exhaust path appears intact"]
+  }
+];
+
+const KEY = "r25_walkthrough_runner_v3";
+
+let state = JSON.parse(localStorage.getItem(KEY) || "null") || {
+  index:0,
+  photos:0,
+  log:[],
+  steps:{},
+  property:{name:"", address:"", city:""}
+};
+if(!state.property) state.property = {name:"", address:"", city:""};
+
+function stepState(i){
+  if(!state.steps[i]) state.steps[i] = {checks:[], note:"", extras:0, status:"open"};
+  return state.steps[i];
+}
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+function now(){
+  return new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"});
+}
+
+function render(){
+  if(state.index >= steps.length){ finish(); return; }
+
+  document.getElementById("runner").style.display = "block";
+  document.getElementById("done").style.display = "none";
+
+  const s = steps[state.index];
+  const ss = stepState(state.index);
+  const n = state.index + 1;
+  const pct = Math.round((state.index / steps.length) * 100);
+
+  document.getElementById("stepCount").textContent = `${n} / ${steps.length}`;
+  document.getElementById("pct").textContent = `${pct}%`;
+  document.getElementById("progressFill").style.width = `${pct}%`;
+  document.getElementById("breadcrumb").textContent = `${s.section} › ${s.task.replace(/^Take photo of |^Take |^Check /,"")}`;
+  document.getElementById("sectionName").textContent = s.section;
+  document.getElementById("taskName").textContent = s.task;
+  document.getElementById("instruction").textContent = s.instruction;
+
+  const checks = document.getElementById("checks");
+  checks.innerHTML = "";
+  s.checks.forEach((label, idx) => {
+    const row = document.createElement("label");
+    row.className = "check";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = !!ss.checks[idx];
+    input.addEventListener("change", () => {
+      ss.checks[idx] = input.checked;
+      save();
+    });
+    const span = document.createElement("span");
+    span.textContent = label;
+    row.appendChild(input);
+    row.appendChild(span);
+    checks.appendChild(row);
+  });
+
+  document.getElementById("issueNote").value = ss.note || "";
+  renderPropertyHeader();
+  document.getElementById("photoCounter").textContent =
+    `Expected photos: ${state.photos}  |  Extra on this item: ${ss.extras || 0}`;
+}
+
+
+document.getElementById("issueNote").addEventListener("input", e => {
+  const ss = stepState(state.index);
+  ss.note = e.target.value;
+  save();
+});
+
+function addPhoto(){
+  const ss = stepState(state.index);
+  ss.extras = (ss.extras || 0) + 1;
+  state.photos++;
+  state.log.push(`${now()} | ${state.index+1}/${steps.length} | ${steps[state.index].section} | ${steps[state.index].task} | EXTRA PHOTO ${state.photos}`);
+  save(); render();
+}
+
+function removePhoto(){
+  const ss = stepState(state.index);
+  if((ss.extras || 0) > 0 && state.photos > 0){
+    state.log.push(`${now()} | ${state.index+1}/${steps.length} | ${steps[state.index].section} | ${steps[state.index].task} | REMOVED EXTRA PHOTO ${state.photos}`);
+    ss.extras--;
+    state.photos--;
+    save(); render();
+  }else{
+    alert("No extra photo to remove on this item.");
+  }
+}
+
+function nextStep(){
+  const s = steps[state.index];
+  const ss = stepState(state.index);
+  state.photos++;
+  ss.status = "done";
+  state.log.push(`${now()} | ${state.index+1}/${steps.length} | ${s.section} | ${s.task} | PHOTO ${state.photos} | ${ss.note && ss.note.trim() ? "ISSUE" : "OK"}${ss.note ? " | NOTE: "+ss.note.replace(/\n/g," ") : ""}`);
+  state.index++;
+  save();
+  render();
+}
+
+function skipStep(){
+  const s = steps[state.index];
+  const ss = stepState(state.index);
+  ss.status = "skipped";
+  state.log.push(`${now()} | ${state.index+1}/${steps.length} | ${s.section} | ${s.task} | SKIPPED${ss.note && ss.note.trim() ? " | ISSUE" : ""}${ss.note ? " | NOTE: "+ss.note.replace(/\n/g," ") : ""}`);
+  state.index++;
+  save();
+  render();
+}
+
+function goBack(){
+  if(state.index > 0){
+    state.index--;
+    save();
+    render();
+  }
+}
+
+let recognition = null;
+let listening = false;
+
+function toggleDictation(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    alert("Browser dictation is not available here. Use the iPad keyboard microphone to dictate into the note box.");
+    document.getElementById("issueNote").focus();
+    return;
+  }
+
+  if(!recognition){
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+    recognition.onresult = e => {
+      let text = "";
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal) text += e.results[i][0].transcript + " ";
+      }
+      if(text){
+        const box = document.getElementById("issueNote");
+        box.value = (box.value + " " + text).trim();
+        const ss = stepState(state.index);
+        ss.note = box.value;
+        save();
+      }
+    };
+    recognition.onend = () => {
+      listening = false;
+      document.getElementById("micBtn").classList.remove("listening");
+    };
+  }
+
+  if(listening){
+    recognition.stop();
+  }else{
+    recognition.start();
+    listening = true;
+    document.getElementById("micBtn").classList.add("listening");
+  }
+}
+
+function buildLog(){
+  return [
+    "R25 WALKTHROUGH SESSION",
+    `Property: ${propertyDisplay()}`,
+    `Completed: ${new Date().toLocaleString()}`,
+    `Expected photo count: ${state.photos}`,
+    "",
+    ...state.log
+  ].join("\n");
+}
+
+function finish(){
+  document.getElementById("runner").style.display = "none";
+  document.getElementById("done").style.display = "block";
+  document.getElementById("log").textContent = buildLog();
+}
+
+function resumeLast(){
+  state.index = Math.max(0, steps.length - 1);
+  save(); render();
+}
+
+async function copyLog(){
+  try{
+    await navigator.clipboard.writeText(buildLog());
+    alert("Session log copied.");
+  }catch{
+    alert("Could not copy automatically. Select the log text manually.");
+  }
+}
+
+function resetRunner(){
+  if(confirm("Reset the walkthrough and erase the saved session on this device?")){
+    localStorage.removeItem(KEY);
+    state = {index:0,photos:0,log:[],steps:{},property:{name:"",address:"",city:""}};
+    render();
+  }
+}
+
+
+function renderPropertyHeader(){
+  const p = state.property || {};
+  document.getElementById("headerPropertyName").textContent = p.name || "Subject Property";
+  const addr = [p.address, p.city].filter(Boolean).join(", ");
+  document.getElementById("headerPropertyAddress").textContent = addr || "Tap menu → Subject property";
+}
+
+function propertyDisplay(){
+  const p = state.property || {};
+  const bits = [p.name, p.address, p.city].filter(Boolean);
+  return bits.length ? bits.join(" | ") : "Not entered";
+}
+
+function toggleMenu(){
+  const drawer = document.getElementById("drawer");
+  const backdrop = document.getElementById("menuBackdrop");
+  const opening = !drawer.classList.contains("open");
+  drawer.classList.toggle("open", opening);
+  backdrop.style.display = opening ? "block" : "none";
+}
+function closeMenu(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("menuBackdrop").style.display = "none";
+}
+function openPropertyModal(){
+  closeMenu();
+  const p = state.property || {};
+  document.getElementById("propertyNameInput").value = p.name || "";
+  document.getElementById("propertyAddressInput").value = p.address || "";
+  document.getElementById("propertyCityInput").value = p.city || "";
+  document.getElementById("propertyModal").style.display = "flex";
+}
+function closePropertyModal(){
+  document.getElementById("propertyModal").style.display = "none";
+}
+function saveProperty(){
+  state.property = {
+    name:document.getElementById("propertyNameInput").value.trim(),
+    address:document.getElementById("propertyAddressInput").value.trim(),
+    city:document.getElementById("propertyCityInput").value.trim()
+  };
+  save();
+  renderPropertyHeader();
+  closePropertyModal();
+}
+function openPreview(){
+  closeMenu();
+  document.getElementById("previewBox").textContent = buildLog();
+  document.getElementById("previewModal").style.display = "flex";
+}
+function closePreview(){
+  document.getElementById("previewModal").style.display = "none";
+}
+function exportLog(){
+  closeMenu();
+  const payload = {
+    schema:"r25-walkthrough-session-v1",
+    exportedAt:new Date().toISOString(),
+    property:state.property,
+    expectedPhotoCount:state.photos,
+    currentStep:state.index,
+    steps:steps.map((s,i)=>({
+      number:i+1,
+      section:s.section,
+      task:s.task,
+      instruction:s.instruction,
+      checklist:s.checks,
+      result:state.steps[i] || null
+    })),
+    eventLog:state.log
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  const safe = (state.property?.name || "property").replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"");
+  a.href = URL.createObjectURL(blob);
+  a.download = `R25-Walkthrough-${safe || "property"}-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+render();
+</script>
+</body>
+</html>
